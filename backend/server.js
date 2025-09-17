@@ -14,7 +14,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ['https://taskmanager82.netlify.app', 'https://taskmanager-r5m8.onrender.com'],
+  origin: ['https://tasskmanager.netlify.app', 'https://taskmanager-r5m8.onrender.com'],
   credentials: true
 }));
 
