@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import "./login.css"; // Import the CSS file
-
+import Admin from "../pages/Admin";
+import { useNavigate } from "react-router-dom";
 function Login({ setToken }) {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtp, setShowOtp] = useState(false);
@@ -137,6 +140,11 @@ function Login({ setToken }) {
           <p className="login-subtitle">
             {showOtp ? "Enter the verification code we sent to your email" : "Sign in to continue to your account"}
           </p>
+          <div>
+             <button className="admin-button" onClick={() => navigate("/admin")}>Go to Admin</button>
+
+          </div>
+       
         </div>
 
         {/* Error message */}

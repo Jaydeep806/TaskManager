@@ -1,0 +1,287 @@
+/* General Dashboard Layout */
+.dashboard-container {
+    min-height: 100vh;
+    background-color: #f3f4f6;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden; /* Prevents horizontal scroll from animations */
+}
+
+.dashboard-header {
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-main {
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem 1rem;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 16rem;
+}
+
+/* General Card and Animated Classes */
+.card {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+}
+
+/* Base animation class for all cards */
+.animated-card {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: transform, opacity;
+}
+
+/* Stagger animation for cards */
+.stats-grid .animated-card:nth-child(1) { animation-delay: 0.1s; }
+.stats-grid .animated-card:nth-child(2) { animation-delay: 0.2s; }
+.stats-grid .animated-card:nth-child(3) { animation-delay: 0.3s; }
+.stats-grid .animated-card:nth-child(4) { animation-delay: 0.4s; }
+.stats-grid .animated-card:nth-child(5) { animation-delay: 0.5s; }
+
+.card-header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Add transition for a smooth hover */
+}
+
+.stat-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.icon-wrapper {
+    padding: 0.5rem;
+    border-radius: 50%;
+}
+
+.stat-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.stat-blue .icon-wrapper { background-color: #dbeafe; }
+.stat-blue .stat-icon { color: #2563eb; }
+
+.stat-green .icon-wrapper { background-color: #d1fae5; }
+.stat-green .stat-icon { color: #059669; }
+
+.stat-emerald .icon-wrapper { background-color: #d1fae5; }
+.stat-emerald .stat-icon { color: #047857; }
+
+.stat-yellow .icon-wrapper { background-color: #fef9c3; }
+.stat-yellow .stat-icon { color: #d97706; }
+
+.stat-purple .icon-wrapper { background-color: #ede9fe; }
+.stat-purple .stat-icon { color: #7c3aed; }
+
+/* Tables */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table th {
+    background-color: #f9fafb;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.table td {
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Animation for table rows */
+.table-row-animated {
+    animation: fadeIn 0.5s ease-in-out forwards;
+    opacity: 0;
+}
+.table tbody tr:nth-child(2n) {
+    background-color: #f9fafb; /* Light gray for even rows */
+}
+.table-row-animated:nth-child(1) { animation-delay: 0.6s; }
+.table-row-animated:nth-child(2) { animation-delay: 0.7s; }
+.table-row-animated:nth-child(3) { animation-delay: 0.8s; }
+.table-row-animated:nth-child(4) { animation-delay: 0.9s; }
+.table-row-animated:nth-child(5) { animation-delay: 1.0s; }
+.table-row-animated:nth-child(6) { animation-delay: 1.1s; }
+.table-row-animated:nth-child(7) { animation-delay: 1.2s; }
+.table-row-animated:nth-child(8) { animation-delay: 1.3s; }
+.table-row-animated:nth-child(9) { animation-delay: 1.4s; }
+.table-row-animated:nth-child(10) { animation-delay: 1.5s; }
+
+
+/* Badges */
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-blue {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-green {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.badge-yellow {
+    background-color: #fef9c3;
+    color: #a16207;
+}
+
+/* Progress Bar for Completion Rate */
+.completion-rate {
+    display: flex;
+    align-items: center;
+}
+
+.progress-bar-bg {
+    width: 5rem;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    height: 0.5rem;
+}
+
+.progress-bar-fill {
+    background-color: #22c55e;
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.8s ease-in-out; /* Animate the progress bar fill */
+}
+
+/* Login Page Styling */
+.login-container {
+    min-height: 100vh;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.login-form {
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 2rem;
+    max-width: 28rem;
+    width: 100%;
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.login-button {
+    width: 100%;
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.login-button:hover {
+    background-color: #1d4ed8;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 0.875rem;
+    background-color: #fee2e2;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Keyframe Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

@@ -5,6 +5,7 @@ import Dashboard from "../pages/Dashboard";
 import CompletedTasks from "../pages/CompletedTasks";
 import UpcomingTasks from "../pages/UpcomingTasks";
 import ReportsPage from "../pages/ReportsPage";
+import Admin from "../pages/Admin";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -51,6 +52,7 @@ function App() {
 
         {/* Catch-all: redirect unknown routes */}
         <Route path="*" element={<Navigate to={token ? "/dashboard" : "/"} />} />
+        <Route path="/admin" element={<Admin/>}/>
       </Routes>
     </Router>
   );
