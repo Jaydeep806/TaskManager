@@ -32,7 +32,7 @@ function TaskList({ tasks = [], fetchTasks, loading = false, token }) {
   const deleteTask = async (id) => {
     setDeletingTasks(prev => new Set(prev).add(id));
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
+      await axios.delete(`https://taskmanager-if8h.onrender.com/api/tasks/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -63,7 +63,7 @@ function TaskList({ tasks = [], fetchTasks, loading = false, token }) {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/tasks/${id}`,
+        `https://taskmanager-if8h.onrender.com/api/tasks/${id}`,
         { completed: !task.completed }, // Toggle completion status
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -83,7 +83,7 @@ function TaskList({ tasks = [], fetchTasks, loading = false, token }) {
 
   const updateTask = async (id, updatedData) => {
     try {
-      await axios.put(`http://localhost:5000/api/tasks/${id}`, updatedData, {
+      await axios.put(`https://taskmanager-if8h.onrender.com/api/tasks/${id}`, updatedData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
