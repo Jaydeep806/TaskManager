@@ -21,7 +21,7 @@ function Login({ setToken }) {
     try {
       console.log("Google credential:", credentialResponse);
       
-      const res = await axios.post("https://taskmanager-if8h.onrender.com/api/auth/google", {
+      const res = await axios.post("https://taskmanager-r5m8.onrender.com/api/auth/google", {
         token: credentialResponse.credential,
       }, {
         timeout: 10000,
@@ -38,7 +38,7 @@ function Login({ setToken }) {
       console.error("Google Login Error:", err);
       
       if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
-        setError("Cannot connect to server. Please make sure your backend is running on https://taskmanager-if8h.onrender.com");
+        setError("Cannot connect to server. Please make sure your backend is running on https://taskmanager-r5m8.onrender.com");
       } else if (err.response) {
         setError(`Server error: ${err.response.status} - ${err.response.data?.message || 'Unknown error'}`);
       } else {
@@ -66,7 +66,7 @@ function Login({ setToken }) {
     setError("");
 
     try {
-      const res = await axios.post("https://taskmanager-if8h.onrender.com/api/auth/verify", { 
+      const res = await axios.post("https://taskmanager-r5m8.onrender.com/api/auth/verify", { 
         email, 
         otp: otp.trim() 
       }, {

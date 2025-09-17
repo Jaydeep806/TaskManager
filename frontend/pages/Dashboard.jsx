@@ -27,7 +27,7 @@ function Dashboard({ token, onLogout }) {
       }
 
       // Fixed API call - removed template literal syntax error
-      const res = await axios.get("https://taskmanager-if8h.onrender.com/api/tasks", {
+      const res = await axios.get("https://taskmanager-r5m8.onrender.com/api/tasks", {
         headers: { 
           Authorization: `Bearer ${token}` 
         },

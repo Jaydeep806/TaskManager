@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Users, CheckSquare, Clock, Bell, RefreshCw, LogOut, Edit, Trash2 } from "lucide-react";
 import './Admin.css';
 
-const API_BASE_URL = "https://taskmanager-if8h.onrender.com/api/admin";
+const API_BASE_URL = "https://taskmanager-r5m8.onrender.com/api/admin";
 
 const Admin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
