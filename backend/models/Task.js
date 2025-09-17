@@ -4,7 +4,6 @@ const taskSchema = new mongoose.Schema({
    email: {
    type: String,
    required: false,   // ✅ just false, not [false, "..."]
-   unique: true,
    sparse: true,      // ✅ allows multiple docs without email
    trim: true,
    lowercase: true,
