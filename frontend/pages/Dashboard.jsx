@@ -9,6 +9,7 @@ function Dashboard({ token, onLogout }) {
   const [isTaskFormOpen, setIsTaskFormOpen] = useState(false); 
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
+  const [taskFormLoading, setTaskFormLoading] = useState(false); // Add this state
 
   const fetchTasks = async () => {
     try {
@@ -60,6 +61,76 @@ function Dashboard({ token, onLogout }) {
 
   const handleCloseTaskForm = () => {
     setIsTaskFormOpen(false);
+    setTaskFormLoading(false); // Reset loading state when closing
+  };
+
+  // Enhanced task addition handler
+  const handleTaskAdded = async (taskData) => {
+    try {
+      setTaskFormLoading(true);
+      setError(null);
+
+      // Get user ID from token
+      let userId = "user123";
+      if (token) {
+        try {
+          const tokenData = JSON.parse(atob(token.split('.')[1]));
+          userId = tokenData.userId || tokenData.id || "user123";
+        } catch (tokenError) {
+          console.warn("Error parsing token, using fallback userId:", tokenError);
+        }
+      }
+
+      // Add userId to task data
+      const taskWithUserId = {
+        ...taskData,
+        userId: userId,
+        email: taskData.email || null // Ensure email is properly set
+      };
+
+      const response = await axios.post(
+        "https://taskmanager-r5m8.onrender.com/api/tasks",
+        taskWithUserId,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      // Success - update tasks list
+      if (response.data.success) {
+        await fetchTasks(); // Refresh the task list
+        setIsTaskFormOpen(false); // Close the form
+        return { success: true };
+      } else {
+        throw new Error(response.data.message || 'Failed to add task');
+      }
+
+    } catch (error) {
+      console.error("Error adding task:", error);
+      
+      // Handle specific error types
+      if (error.response?.status === 400) {
+        const errorMessage = error.response.data.message || error.response.data.error;
+        
+        if (errorMessage && errorMessage.includes('duplicate')) {
+          setError("Duplicate entry detected. Please check your input and try again.");
+          return { success: false, error: "Duplicate entry detected" };
+        } else if (errorMessage && errorMessage.includes('E11000')) {
+          setError("This email is already associated with another task.");
+          return { success: false, error: "Email already exists" };
+        }
+      }
+      
+      const errorMsg = error.response?.data?.message || error.message || "Failed to add task";
+      setError(errorMsg);
+      return { success: false, error: errorMsg };
+      
+    } finally {
+      setTaskFormLoading(false);
+    }
   };
 
   return (
@@ -75,7 +146,6 @@ function Dashboard({ token, onLogout }) {
               </svg>
             </div>
             <h3 className="card-title">Create New Task</h3>
-            
           </div>
           <div className="card-content">
             <p>Ready to add a new task to your list? Click below to get started and stay organized.</p>
@@ -84,8 +154,9 @@ function Dashboard({ token, onLogout }) {
             <button 
               className="add-task-btn" 
               onClick={handleAddTaskClick}
+              disabled={taskFormLoading}
             >
-              ADD TASK
+              {taskFormLoading ? 'ADDING...' : 'ADD TASK'}
             </button>
           </div>
         </div>
@@ -93,18 +164,24 @@ function Dashboard({ token, onLogout }) {
 
       {error && (
         <div className="error-message">
-          {error}
-          <button onClick={fetchTasks} className="retry-btn">
-            Retry
-          </button>
+          <span>{error}</span>
+          <div className="error-actions">
+            <button onClick={() => setError(null)} className="dismiss-btn">
+              Dismiss
+            </button>
+            <button onClick={fetchTasks} className="retry-btn">
+              Retry
+            </button>
+          </div>
         </div>
       )}
 
       <TaskForm 
-        fetchTasks={fetchTasks} 
+        onTaskAdded={handleTaskAdded} // Use the enhanced handler
         token={token}
         isOpen={isTaskFormOpen}
         onClose={handleCloseTaskForm}
+        loading={taskFormLoading}
       />
       
       <TaskList 
@@ -159,27 +236,6 @@ function Dashboard({ token, onLogout }) {
           font-weight: 600;
           flex: 1;
         }
-        .close-btn {
-          background: none;
-          border: none;
-          color: white;
-          font-size: 24px;
-          cursor: pointer;
-          padding: 0;
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          opacity: 0.7;
-          transition: opacity 0.2s ease;
-          position: absolute;
-          top: 15px;
-          right: 15px;
-        }
-        .close-btn:hover {
-          opacity: 1;
-        }
         .card-content {
           padding: 24px;
           text-align: center;
@@ -208,10 +264,16 @@ function Dashboard({ token, onLogout }) {
           letter-spacing: 0.5px;
           width: 100%;
         }
-        .add-task-btn:hover {
+        .add-task-btn:hover:not(:disabled) {
           background: #059669;
           transform: translateY(-1px);
           box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .add-task-btn:disabled {
+          background: #9ca3af;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
         }
         .error-message {
           background: #fef2f2;
@@ -223,19 +285,37 @@ function Dashboard({ token, onLogout }) {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          flex-wrap: wrap;
+          gap: 12px;
         }
-        .retry-btn {
-          background: #dc2626;
-          color: white;
+        .error-actions {
+          display: flex;
+          gap: 8px;
+          flex-shrink: 0;
+        }
+        .retry-btn, .dismiss-btn {
           border: none;
           padding: 8px 16px;
           border-radius: 6px;
           cursor: pointer;
           font-size: 14px;
           font-weight: 500;
+          transition: all 0.2s ease;
+        }
+        .retry-btn {
+          background: #dc2626;
+          color: white;
         }
         .retry-btn:hover {
           background: #b91c1c;
+        }
+        .dismiss-btn {
+          background: #f3f4f6;
+          color: #6b7280;
+        }
+        .dismiss-btn:hover {
+          background: #e5e7eb;
+          color: #374151;
         }
         @media (max-width: 480px) {
           .dashboard-header {
@@ -243,6 +323,14 @@ function Dashboard({ token, onLogout }) {
           }
           .add-task-card {
             max-width: 100%;
+          }
+          .error-message {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .error-actions {
+            align-self: stretch;
+            justify-content: flex-end;
           }
         }
       `}</style>
