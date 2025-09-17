@@ -2,13 +2,15 @@ import mongoose from "mongoose";
 
 const taskSchema = new mongoose.Schema({
    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      trim: true,
-      lowercase: true,
-      match: [/.+@.+\..+/, "Please enter a valid email address"],
-    },
+   type: String,
+   required: false,   // ✅ just false, not [false, "..."]
+   unique: true,
+   sparse: true,      // ✅ allows multiple docs without email
+   trim: true,
+   lowercase: true,
+   match: [/.+@.+\..+/, "Please enter a valid email address"]
+   },
+
     name: {
       type: String,
       required: false, // Name is optional, as it may not be provided by all auth methods
