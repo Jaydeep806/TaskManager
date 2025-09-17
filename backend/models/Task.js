@@ -1,14 +1,7 @@
 import mongoose from "mongoose";
 
 const taskSchema = new mongoose.Schema({
-   email: {
-   type: String,
-   required: false,   // ✅ just false, not [false, "..."]
-   sparse: true,      // ✅ allows multiple docs without email
-   trim: true,
-   lowercase: true,
-   match: [/.+@.+\..+/, "Please enter a valid email address"]
-   },
+  
 
     name: {
       type: String,
