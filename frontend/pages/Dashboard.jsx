@@ -9,7 +9,8 @@ function Dashboard({ token, onLogout }) {
   const [isTaskFormOpen, setIsTaskFormOpen] = useState(false); 
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
-  const [taskFormLoading, setTaskFormLoading] = useState(false); // Add this state
+  const [taskFormLoading, setTaskFormLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null); // Add success message state
 
   const fetchTasks = async () => {
     try {
@@ -57,6 +58,8 @@ function Dashboard({ token, onLogout }) {
 
   const handleAddTaskClick = () => {
     setIsTaskFormOpen(true);
+    setError(null); // Clear any previous errors
+    setSuccessMessage(null); // Clear any previous success messages
   };
 
   const handleCloseTaskForm = () => {
@@ -69,6 +72,7 @@ function Dashboard({ token, onLogout }) {
     try {
       setTaskFormLoading(true);
       setError(null);
+      setSuccessMessage(null);
 
       // Get user ID from token
       let userId = "user123";
@@ -99,10 +103,25 @@ function Dashboard({ token, onLogout }) {
         }
       );
 
-      // Success - update tasks list
+      // Success - handle response
       if (response.data.success) {
-        await fetchTasks(); // Refresh the task list
+        // Option 1: Add the new task directly to the state (faster UI update)
+        const newTask = response.data.task || response.data.data;
+        if (newTask) {
+          setTasks(prevTasks => [...prevTasks, newTask]);
+        }
+        
+        // Option 2: Also refresh from server to ensure data consistency
+        await fetchTasks();
+        
         setIsTaskFormOpen(false); // Close the form
+        setSuccessMessage("Task added successfully!"); // Show success message
+        
+        // Auto-hide success message after 3 seconds
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
+        
         return { success: true };
       } else {
         throw new Error(response.data.message || 'Failed to add task');
@@ -162,6 +181,17 @@ function Dashboard({ token, onLogout }) {
         </div>
       </div>
 
+      {/* Success Message */}
+      {successMessage && (
+        <div className="success-message">
+          <span>{successMessage}</span>
+          <button onClick={() => setSuccessMessage(null)} className="dismiss-btn">
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Error Message */}
       {error && (
         <div className="error-message">
           <span>{error}</span>
@@ -275,6 +305,18 @@ function Dashboard({ token, onLogout }) {
           transform: none;
           box-shadow: none;
         }
+        .success-message {
+          background: #f0fdf4;
+          border: 1px solid #bbf7d0;
+          color: #166534;
+          padding: 16px;
+          margin: 20px;
+          border-radius: 8px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          animation: slideIn 0.3s ease-out;
+        }
         .error-message {
           background: #fef2f2;
           border: 1px solid #fecaca;
@@ -317,6 +359,26 @@ function Dashboard({ token, onLogout }) {
           background: #e5e7eb;
           color: #374151;
         }
+        .success-message .dismiss-btn {
+          background: transparent;
+          color: #166534;
+          padding: 4px 8px;
+          font-size: 16px;
+          line-height: 1;
+        }
+        .success-message .dismiss-btn:hover {
+          background: rgba(22, 101, 52, 0.1);
+        }
+        @keyframes slideIn {
+          from {
+            transform: translateY(-10px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
         @media (max-width: 480px) {
           .dashboard-header {
             padding: 20px;
@@ -324,7 +386,7 @@ function Dashboard({ token, onLogout }) {
           .add-task-card {
             max-width: 100%;
           }
-          .error-message {
+          .error-message, .success-message {
             flex-direction: column;
             align-items: flex-start;
           }
